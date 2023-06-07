@@ -7,7 +7,7 @@ import styles from "./Post.module.css";
 import { useState } from "react";
 
 export function Post({ author, publishedAt, content }) {
-  const [comments, setComments] = useState(["Top demais!"]);
+  const [comments, setComments] = useState([]);
   const [newCommentText, setNewCommentText] = useState("");
 
   const publishedDateFormatted = format(

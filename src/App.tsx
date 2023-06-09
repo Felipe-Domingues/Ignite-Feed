@@ -86,7 +86,7 @@ export function App() {
 
       <div className={styles.wrapper}>
         <Sidebar />
-        <main>
+        <main className={styles.main}>
           {posts.map((post) => {
             return <Post key={post.id} post={post} />;
           })}

@@ -39,6 +39,7 @@
 .post > header time {
   font-size: 0.875rem;
   color: var(--gray-400);
+  text-align: center;
 }
 
 .author {

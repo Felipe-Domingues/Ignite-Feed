@@ -104,7 +104,7 @@ export function Post({ post }: PostProps) {
           } else if (line.type === "link") {
             if (line.anchor) {
               return (
-                <p key={post.id}>
+                <p key={Math.random() * 10}>
                   {line.anchor.map((anchor) => {
                     return (
                       <a key={anchor.text} href={anchor.link}>

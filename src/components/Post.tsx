@@ -4,26 +4,54 @@ import ptBR from "date-fns/locale/pt-BR";
 import { Avatar } from "./Avatar";
 import { Comment } from "./Comment";
 import styles from "./Post.module.css";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
 
-export function Post({ author, publishedAt, content }) {
-  const [comments, setComments] = useState([]);
+interface Author {
+  name: string;
+  role: string;
+  avatarUrl: string;
+}
+
+export interface PostType {
+  id: number;
+  author: Author;
+  publishedAt: Date;
+  content: Content[];
+}
+
+interface PostProps {
+  post: PostType;
+}
+
+interface Content {
+  type: "paragraph" | "link";
+  text?: string;
+  anchor?: Anchor[];
+}
+
+interface Anchor {
+  text: string;
+  link: string;
+}
+
+export function Post({ post }: PostProps) {
+  const [comments, setComments] = useState<string[]>([]);
   const [newCommentText, setNewCommentText] = useState("");
 
   const publishedDateFormatted = format(
-    publishedAt,
+    post.publishedAt,
     "d 'de' LLLL 'às' HH:mm'h'",
     {
       locale: ptBR,
     }
   );
 
-  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+  const publishedDateRelativeToNow = formatDistanceToNow(post.publishedAt, {
     locale: ptBR,
     addSuffix: true,
   });
 
-  function handleCreateNewComment() {
+  function handleCreateNewComment(event: FormEvent) {
     event.preventDefault();
 
     setComments([...comments, newCommentText]);
@@ -31,16 +59,16 @@ export function Post({ author, publishedAt, content }) {
     setNewCommentText("");
   }
 
-  function handleNewCommentChange() {
+  function handleNewCommentChange(event: ChangeEvent<HTMLTextAreaElement>) {
     event.target.setCustomValidity("");
     setNewCommentText(event.target.value);
   }
 
-  function handleNewCommentInvalid() {
+  function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>) {
     event.target.setCustomValidity("Este campo é obrigatório!");
   }
 
-  function deleteComment(commentToDelete) {
+  function deleteComment(commentToDelete: string) {
     const commentsWithoutDeletedOne = comments.filter((comment) => {
       return comment !== commentToDelete;
     });
@@ -54,43 +82,39 @@ export function Post({ author, publishedAt, content }) {
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar src={author.avatarUrl} />
+          <Avatar src={post.author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>{author.name}</strong>
-            <span>{author.role}</span>
+            <strong>{post.author.name}</strong>
+            <span>{post.author.role}</span>
           </div>
         </div>
 
         <time
           title={publishedDateFormatted}
-          dateTime={publishedAt.toISOString()}
+          dateTime={post.publishedAt.toISOString()}
         >
           {publishedDateRelativeToNow}
         </time>
       </header>
 
       <div className={styles.content}>
-        {content.map((line) => {
+        {post.content.map((line) => {
           if (line.type === "paragraph") {
-            return <p key={line.content}>{line.content}</p>;
+            return <p key={line.text}>{line.text}</p>;
           } else if (line.type === "link") {
-            return (
-              <p key={line.content}>
-                <a href={line.link}>{line.content}</a>
-              </p>
-            );
-          } else if (line.type === "inlineLink") {
-            return (
-              <p key={line.content}>
-                {line.content.map((hashtag) => {
-                  return (
-                    <a key={hashtag.text} href={hashtag.link}>
-                      {hashtag.text}{" "}
-                    </a>
-                  );
-                })}
-              </p>
-            );
+            if (line.anchor) {
+              return (
+                <p key={post.id}>
+                  {line.anchor.map((anchor) => {
+                    return (
+                      <a key={anchor.text} href={anchor.link}>
+                        {anchor.text}{" "}
+                      </a>
+                    );
+                  })}
+                </p>
+              );
+            }
           }
         })}
       </div>

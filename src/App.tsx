@@ -1,10 +1,10 @@
-import { Post } from "./components/Post";
+import { Post, PostType } from "./components/Post";
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import styles from "./App.module.css";
 import "./global.css";
 
-const posts = [
+const posts: PostType[] = [
   {
     id: 1,
     author: {
@@ -13,20 +13,23 @@ const posts = [
       role: "FullStack Web Developer",
     },
     content: [
-      { type: "paragraph", content: "Fala galera 👋" },
+      { type: "paragraph", text: "Fala galera 👋" },
       {
         type: "paragraph",
-        content:
-          "Acabei de subir mais um projeto no meu portfólio. É um projeto que fiz no NLW Spacetime, evento da Rocketseat. O nome do projeto é Cápsula do Tempo 🚀",
+        text: "Acabei de subir mais um projeto no meu portfólio. É um projeto que fiz no NLW Spacetime, evento da Rocketseat. O nome do projeto é Cápsula do Tempo 🚀",
       },
       {
         type: "link",
-        content: "👉 Felipe-Domingues/Rocketseat-NLW-Spacetime",
-        link: "https://rocketseat-nlw-spacetime.vercel.app/",
+        anchor: [
+          {
+            text: "👉 Felipe-Domingues/Rocketseat-NLW-Spacetime",
+            link: "https://rocketseat-nlw-spacetime.vercel.app/",
+          },
+        ],
       },
       {
-        type: "inlineLink",
-        content: [
+        type: "link",
+        anchor: [
           {
             text: "#nlw",
             link: "",
@@ -53,14 +56,14 @@ const posts = [
       role: "CTO @ Rocketseat",
     },
     content: [
-      { type: "paragraph", content: "Opa!" },
+      { type: "paragraph", text: "Opa!" },
       {
         type: "paragraph",
-        content: "Rede social legal 👌👌❤️",
+        text: "Rede social legal 👌👌❤️",
       },
       {
-        type: "inlineLink",
-        content: [
+        type: "link",
+        anchor: [
           {
             text: "#redeSocial",
             link: "",
@@ -85,14 +88,7 @@ export function App() {
         <Sidebar />
         <main>
           {posts.map((post) => {
-            return (
-              <Post
-                key={post.id}
-                author={post.author}
-                content={post.content}
-                publishedAt={post.publishedAt}
-              />
-            );
+            return <Post key={post.id} post={post} />;
           })}
         </main>
       </div>

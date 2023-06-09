@@ -1,4 +1,4 @@
-<h1 align="center">Cápsula do Tempo</h1>
+<h1 align="center">Ignite Feed</h1>
 
 <p align="center">
 Criado na trilha React do bootcamp Ignite promovido pela Rocketseat para ensino dos fundamento do framework ReactJS. <br/>
